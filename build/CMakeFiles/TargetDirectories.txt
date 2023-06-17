@@ -1,6 +1,0 @@
-/home/j/桌面/JSON_Parser/build/CMakeFiles/main.dir
-/home/j/桌面/JSON_Parser/build/CMakeFiles/edit_cache.dir
-/home/j/桌面/JSON_Parser/build/CMakeFiles/rebuild_cache.dir
-/home/j/桌面/JSON_Parser/build/jsonparser/CMakeFiles/jsonparserlib.dir
-/home/j/桌面/JSON_Parser/build/jsonparser/CMakeFiles/edit_cache.dir
-/home/j/桌面/JSON_Parser/build/jsonparser/CMakeFiles/rebuild_cache.dir

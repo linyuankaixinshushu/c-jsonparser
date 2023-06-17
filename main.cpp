@@ -14,7 +14,12 @@ void print(jsonobject& json)
     if(json.data.index() == 1)
     {
         bool res = std::get<1>(json.data);
-        std::cout << res << std::endl;
+        if(res == true) {
+            std::cout << "true" << std::endl;
+        }
+        if(res == false) {
+            std::cout << "false" << std::endl;
+        }
     }
     if(json.data.index() == 2)
     {
@@ -47,7 +52,7 @@ void print(jsonobject& json)
 }
 
 int main() {
-    std::string test("{\"nihao\" : 123 , \"woshi\": 1231e3}");
+    std::string test("[1,23,4,123,]  //comment comment sajosdojao");
     jsonparser parser(test);
     jsonobject j = parser.parse();
     print(j);
