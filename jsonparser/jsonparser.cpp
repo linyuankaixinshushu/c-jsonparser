@@ -2,18 +2,16 @@
 #include <stdexcept>
 #include <regex>
 #include <optional>
-#include <charconv>
 #include <unordered_map>
 
-jsonparser::jsonparser(std::string_view jsonstring):json_str(jsonstring) {
+jsonparser::jsonparser():json_str(""),cur_index(0) {}
+
+void jsonparser::init(std::string_view str) {
     cur_index = 0;
+    json_str = str;
 }
 
-jsonobject jsonparser::parse() {
-    return parse_inner(0);
-} 
-
-jsonobject jsonparser::parse_inner(int parse_dict_or_list = 0) {
+jsonobject jsonparser::parse(int parse_dict_or_list = 0) {
     if(json_str.empty()) {
         throw std::logic_error("empty string!");
     }
@@ -38,7 +36,7 @@ jsonobject jsonparser::parse_inner(int parse_dict_or_list = 0) {
                     throw std::logic_error("unexpected character in parse json");
                 }
             }    
-            return jsonobject{nullptr};
+            return jsonobject{};
         }
     }
     if((sign >='0' && sign <= '9') || sign == '-') {
@@ -88,7 +86,7 @@ jsonobject jsonparser::parse_inner(int parse_dict_or_list = 0) {
         }
         while(true) {
             cur_index = get_next_sign(json_str,cur_index);
-            obj_vec.emplace_back(parse_inner(1));
+            obj_vec.emplace_back(parse(1));
             cur_index = get_next_sign(json_str,cur_index);
             if(json_str[cur_index] == ']') {
                 cur_index++;
@@ -114,7 +112,7 @@ jsonobject jsonparser::parse_inner(int parse_dict_or_list = 0) {
         auto obj = new std::unordered_map<std::string,jsonobject>();
         cur_index = get_next_sign(json_str, cur_index + 1);
         if(json_str[cur_index] == '}') {
-            return jsonobject();
+            return jsonobject{obj};
         }
         while(true) {
             cur_index = get_next_sign(json_str, cur_index);
@@ -122,7 +120,7 @@ jsonobject jsonparser::parse_inner(int parse_dict_or_list = 0) {
                 throw std::logic_error("expected '\"' in parse dict");
                 delete obj;
             }
-            std::string key(std::get<4>(parse_inner().data));
+            std::string key(std::get<4>(parse().data));
             if(obj -> find(key) != obj -> end()) {
                 throw std::logic_error("repeat key in object!");
                 delete obj;
@@ -134,7 +132,7 @@ jsonobject jsonparser::parse_inner(int parse_dict_or_list = 0) {
             }
             else {
                 cur_index = get_next_sign(json_str, cur_index + 1);
-                obj -> emplace(std::pair<std::string,jsonobject>(key,parse_inner(1)));
+                obj -> emplace(std::pair<std::string,jsonobject>(key,parse(1)));
             }
             cur_index = get_next_sign(json_str, cur_index);
             if(json_str[cur_index] == '}') {
@@ -233,12 +231,8 @@ std::optional<std::string> jsonparser::parse_str(std::string_view str, int& star
     return std::nullopt;
 }
 
-template<typename T>
-std::optional<T> jsonparser::parse_num(std::string_view str) {
-    auto value = T{};
-    auto res = std::from_chars(str.data(),str.data() + str.length(),value);
-    if(res.ec == std::errc()) {
-        return value;
-    }
-    return std::nullopt;
+jsonobject jsonparser::FROM_STRING(std::string_view str) {
+    static jsonparser parser;
+    parser.init(str);
+    return parser.parse();
 }

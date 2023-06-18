@@ -3,6 +3,7 @@
 #include <string_view>
 #include <iostream>
 #include <variant>
+#include <jsonobject.h>
 
 void print(jsonobject& );
 
@@ -52,8 +53,7 @@ void print(jsonobject& json)
 }
 
 int main() {
-    std::string test("[1,23,4,123,]  //comment comment sajosdojao");
-    jsonparser parser(test);
-    jsonobject j = parser.parse();
-    print(j);
+    std::string test("32  //comment comment sajosdojao");
+    jsonobject json = jsonparser::FROM_STRING(test); 
+    print(json);
 }   
