@@ -24,7 +24,7 @@ enum json_value_type {
 
 
 class jsonobject {
-    public:
+    private:
         json_value_type data_type;
         std::variant
         <std::nullptr_t //null }
@@ -35,7 +35,6 @@ class jsonobject {
         ,list_t
         ,dict_t                  // {"你好":1}
         > data;
-
     public:
         jsonobject();
         jsonobject(int);
@@ -78,6 +77,46 @@ class jsonobject {
             }
             return std::get<T>(data);
         }
+        template<class T>
+        void set_value(const T &value) {
+            if constexpr (std::is_same<T,std::nullptr_t>::value) {
+                data = value;
+                data_type = json_value_type::NULL_T;
+            }
+            else if constexpr (std::is_same<T,bool>::value) {
+                data = value;
+                data_type = json_value_type::BOOL_T;
+            }
+            else if constexpr (std::is_same<T,std::string>::value) {
+                data = value;
+                data_type = json_value_type::STRING_T;
+            }
+            else if constexpr (std::is_same<T,double>::value) {
+                data = value;
+                data_type = json_value_type::DOUBLE_T;
+            }
+            else if constexpr (std::is_same<T,int>::value) {
+                data = value;
+                data_type = json_value_type::INT_T;
+            }
+            else if constexpr (std::is_same<T,list_t>::value) {
+                data = value;
+                data_type = json_value_type::LIST_T;
+            }
+            else if constexpr (std::is_same<T,dict_t>::value) {
+                data = new std::unordered_map<std::string ,jsonobject>(*value);
+                data_type = json_value_type::NULL_T;
+            }
+            else {
+                std::string cur_type_name = typeid(T).name();
+                throw new std::logic_error(std::string("type") + cur_type_name + std::string("is not support type"));
+            }
+            if(data_type == json_value_type::DICT_T) {
+                delete std::get<dict_t>(data);
+            }
+        }
+
+        std::string to_string();
 
         jsonobject& operator[](int index);
         jsonobject& operator[](std::string key);

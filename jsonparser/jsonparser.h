@@ -25,5 +25,9 @@ class jsonparser {
         jsonobject parse(int flag);
     public:
         jsonparser();
-        static jsonobject FROM_STRING(std::string_view str);
+        static jsonobject FROM_STRING(std::string_view str);\
+        template<class T>
+        static std::string TO_JSON(const T& value) {
+            jsonobject(value);
+        }
 };

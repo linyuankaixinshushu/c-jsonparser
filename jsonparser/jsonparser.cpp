@@ -120,11 +120,11 @@ jsonobject jsonparser::parse(int parse_dict_or_list = 0) {
                 throw std::logic_error("expected '\"' in parse dict");
                 delete obj;
             }
-            std::string key(std::get<4>(parse().data));
+            std::string key(parse(1).get_value<std::string>());
             if(obj -> find(key) != obj -> end()) {
                 throw std::logic_error("repeat key in object!");
                 delete obj;
-            }
+            }        std::string& to_string_inner(std::string& string);
             cur_index = get_next_sign(json_str, cur_index);
             if(json_str[cur_index] != ':') {
                 throw std::logic_error("expected '\"' in parse dict");
