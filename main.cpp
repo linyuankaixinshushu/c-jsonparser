@@ -5,56 +5,25 @@
 #include <variant>
 #include <jsonobject.h>
 
-void print(jsonobject& );
 
-// void print(jsonobject& json)
-// {
-//     if(json.data.index() == 0) {
-//         std::cout << "null" << std::endl;
-//     }
-//     if(json.data.index() == 1)
-//     {
-//         bool res = std::get<1>(json.data);
-//         if(res == true) {
-//             std::cout << "true" << std::endl;
-//         }
-//         if(res == false) {
-//             std::cout << "false" << std::endl;
-//         }
-//     }
-//     if(json.data.index() == 2)
-//     {
-//         int res = std::get<2>(json.data);
-//         std::cout << res << std::endl;
-//     }
-//     if(json.data.index() == 3)
-//     {
-//         double res = std::get<3>(json.data);
-//         std::cout << res << std::endl;
-//     }
-//     if(json.data.index() == 4)
-//     {
-//         std::string res = std::get<4>(json.data);
-//         std::cout << res << std::endl;
-//     }
-//     if(json.data.index() == 5) {
-//        auto const & a = std::get<5>(json.data);
-//        for(auto i : a) {
-//             print(i);
-//        }
-//     }
-//     if(json.data.index() == 6) {
-//         auto const & a = std::get<6>(json.data);
-//         for(auto i = a->begin(); i != a->end(); i++){
-//             std::cout << i ->first << " : ";
-//             print(i -> second);
-//         }
-//     }
-// }
+struct test {
+    int name1 = 3;
+    int name2 = 4;
+    START_CREATE_TO_JSON_FUNC
+    MEMBER_TO_JSON(name1);
+    MEMBER_TO_JSON(name2);
+    END_CREATE_TO_JSON_FUNC
+    
+    START_CREATE_FROMJSON_FUNC
+    MEMBER_ASSIGN_FROM_JSON(name1,int);
+    MEMBER_ASSIGN_FROM_JSON(name2,int);
+    END_CREATE_FROMJSON_FUNC
+};
+
 
 int main() {
-    std::string test("{\"32\":12,\"list\":[1,2,null,false]}  //comment comment sajosdojao");
-    jsonobject json = jsonparser::FROM_STRING(test); 
-    json.set_value(1);
-    std::cout << json.to_string();
+    test a;
+    std::cout << cppsimplejson::jsonparser::TO_JSON(a) << std::endl;
+    a.form_json("{\"name1\":1,\"name2\":2}");
+    std::cout << a.name1 << std::endl << a.name2 << std::endl;
 }   

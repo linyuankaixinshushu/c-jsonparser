@@ -1,5 +1,7 @@
 #include <jsonobject.h>
 
+namespace cppsimplejson {
+
 jsonobject::jsonobject() : data(nullptr), data_type(json_value_type::NULL_T) {}
 jsonobject::jsonobject(int value) : data(value), data_type(json_value_type::INT_T) {}
 jsonobject::jsonobject(double value) : data(value), data_type(json_value_type::DOUBLE_T) {}
@@ -79,4 +81,6 @@ std::string jsonobject::to_string() {
         }
     }
     return json_str;
+}
+
 }

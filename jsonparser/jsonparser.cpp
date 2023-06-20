@@ -4,6 +4,8 @@
 #include <optional>
 #include <unordered_map>
 
+namespace cppsimplejson { 
+
 jsonparser::jsonparser():json_str(""),cur_index(0) {}
 
 void jsonparser::init(std::string_view str) {
@@ -235,4 +237,6 @@ jsonobject jsonparser::FROM_STRING(std::string_view str) {
     static jsonparser parser;
     parser.init(str);
     return parser.parse();
+}
+
 }

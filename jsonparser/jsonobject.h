@@ -6,9 +6,12 @@
 #include <unordered_map>
 #include <stdexcept>
 
+
+namespace cppsimplejson {
+
 class jsonobject;
 
-using dict_t = std::unordered_map<std::string ,jsonobject> *;
+using dict_t = std::unordered_map<std::string ,jsonobject>*;
 using list_t = std::vector<jsonobject>;
 using null = std::nullptr_t;
 
@@ -121,3 +124,6 @@ class jsonobject {
         jsonobject& operator[](int index);
         jsonobject& operator[](std::string key);
 };
+
+
+}
